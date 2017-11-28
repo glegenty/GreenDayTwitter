@@ -3,12 +3,12 @@ import * as PIXI from 'pixi.js'
 export default class Visualizer {
   constructor(opts) {
     opts = opts || {}
-    this.resolution = opts.resolution || 2
+    this.resolution = opts.resolution || 4
     this.cW = window.innerWidth
     this.cH = window.innerHeight
     this.positions = []
     
-    this.particles = new PIXI.particles.ParticleContainer(5000)
+    this.particles = new PIXI.particles.ParticleContainer(100000)
     this.texture = PIXI.loader.resources['part'].texture
     console.log(this.texture)
     this.renderer = PIXI.autoDetectRenderer(this.cW, this.cH, {antialias: false, transparent: true, resolution: 1})
@@ -32,11 +32,12 @@ export default class Visualizer {
     this.wordCanvas.width = this.cW
     this.wordCanvas.height = this.cH
     this.wordCtx = this.wordCanvas.getContext('2d')
+    this.wordCanvas.style.opacity = 0
     document.querySelector('#App').appendChild(this.wordCanvas)
     this.changeText('GreenDay')
   }
   getTextPosition () {
-    const imageData = this.wordCtx.getImageData(0, 0, this.cW, this.cH);
+    const imageData = this.wordCtx.getImageData(0, 0, this.cW, this.cH)
     let i = 0
     let index = 0
     for (let x = 0; x < imageData.width; x += this.resolution) {
@@ -47,7 +48,7 @@ export default class Visualizer {
             this.positions[index] = new PIXI.Sprite(this.texture)
             this.positions[index].x = x
             this.positions[index].y = y
-            this.positions[index].scale.set(0.03)
+            this.positions[index].scale.set(0.1)
             this.particles.addChild(this.positions[index])
             
             // console.log(1)
@@ -59,21 +60,22 @@ export default class Visualizer {
           }
           index++;
         } else if (this.positions[index]){
-          // console.log(this.positions[index])
+            // console.log(this.positions[index])
           
-          // this.positions[index].destroy()
+          this.positions[index].destroy()
+          index++;          
         }
       }
     }
     console.log(this.positions.length - index > 0)
     
-    this.positions.length - index > 0 && this.particles.removeChildren(this.positions.length - index, this.positions.length);
+    this.positions.length - index > 0 && this.particles.removeChildren(this.positions.length - index, this.positions.length)
     
   }
   changeText (tweet) {
     let text = this.formatText(tweet)
-    this.wordCtx.clearRect(0, 0, this.cW, this.cH);
-    this.wordCtx.font = '48px serif'
+    this.wordCtx.clearRect(0, 0, this.cW, this.cH)
+    this.wordCtx.font = '100px serif'
     this.wordCtx.textAlign = 'center'
     this.wordCtx.fillText(text, this.cW/2, this.cH/2)
     this.getTextPosition()

@@ -28,7 +28,7 @@ const App = (function (){
 console.log(loader)
 
 loader
-  .add('part', './static/img/part.png')
+  .add('part', './static/img/leaf.svg')
   .load(App.run)
 
 

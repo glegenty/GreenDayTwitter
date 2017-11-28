@@ -1,4 +1,5 @@
-import PIXI from 'pixi.js';
+import visualiser from './components/visualizer'
+import '../static/main.css'
 console.log('yo')
 document.querySelector('body').innerHTML = '<H1> HELLO </H1>'
 const socket = new io();

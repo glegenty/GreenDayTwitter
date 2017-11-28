@@ -59,9 +59,7 @@ socket.on('connection', () => console.log('new connection'))
 
 const stream = T.stream('statuses/filter', { track: '#greenday' })
 
-stream.on('tweet', function (tweet) {
-  console.log(tweet.text)
-  
+stream.on('tweet', function (tweet) {  
   socket.emit('tweet', tweet)  
 })
 

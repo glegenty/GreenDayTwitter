@@ -23,6 +23,14 @@ module.exports = {
       }),
       // new HtmlWebpackHarddiskPlugin()
     ],
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          use: ["style-loader", "css-loader"],
+        },
+      ],
+    },
     resolve: {
       modules: [
         path.resolve('./node_modules')        

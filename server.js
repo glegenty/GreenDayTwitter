@@ -2,7 +2,9 @@ import path from 'path'
 import http from 'http'
 import express from 'express'  
 import webpack from 'webpack'
-import socket from 'socket.io'  
+import io from 'socket.io' 
+import Twit from 'twit'
+
 import webpackDevMiddleware from 'webpack-dev-middleware'  
 import webpackHotMiddleware from 'webpack-hot-middleware'  
 import config from './webpack.dev.js'
@@ -26,26 +28,40 @@ app.use(webpackHotMiddleware(compiler, {
 }))
 
 app.get('*', (req, res, next) => {
-  const filename = path.join(compiler.outputPath,'index.html');
+  const filename = path.join(compiler.outputPath,'index.html')
   console.log(filename)
   compiler.outputFileSystem.readFile(filename, function(err, result){
     if (err) {
-      return next(err);
+      return next(err)
     }
     console.log(result)
-    res.set('content-type','text/html');
-    res.send(result);
-    res.end();
+    res.set('content-type','text/html')
+    res.send(result)
+    res.end()
   })
   // res.sendFile(__dirname + '/dist/index.html')    
 })
 
 
-const server = http.createServer(app);
+const server = http.createServer(app)
 server.listen(process.env.PORT || DEFAULT_PORT, function() {
-  console.log('Listening on %j', server.address());
-});
+  console.log('Listening on %j', server.address())
+})
+var T = new Twit({
+  consumer_key:         'tIWMLrOGlscGL4QLLSOv9kXpt',
+  consumer_secret:      'NAxdxG1WNlJMPHNYHoUY3TA0Oph0KatJqlvZaeiSQUgbWyNE2y',
+  access_token:         '166345154-UQbO8kEa9ott4HlJvK407EhGpyIaoMzo3VolRNr1',
+  access_token_secret:  'WrtoB1HSGLfJlwZOwOAD4IjBONY1b0QqxI7Pm855dUKRb',
+  timeout_ms:           60*1000,  // optional HTTP request timeout to apply to all requests.
+})
+const socket = io().listen(server)
+socket.on('connection', () => console.log('new connection'))
 
-const io = socket().listen(server)
+const stream = T.stream('statuses/filter', { track: '#greenday' })
 
-io.on('connection', () => console.log('new connection'));
+stream.on('tweet', function (tweet) {
+  console.log(tweet.text)
+  
+  socket.emit('tweet', tweet)  
+})
+

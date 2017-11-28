@@ -12,7 +12,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "pixi.js": "^4.6.1",
-    "socket.io": "^2.0.4"
+    "socket.io": "^2.0.4",
+    "twit": "^2.2.9"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

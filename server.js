@@ -26,6 +26,8 @@ app.use(webpackHotMiddleware(compiler, {
   // path: '/__webpack_hmr', 
   heartbeat: 10 * 1000
 }))
+app.use(express.static(DIST_DIR));
+
 
 app.get('*', (req, res, next) => {
   const filename = path.join(compiler.outputPath,'index.html')

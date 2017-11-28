@@ -1,14 +1,38 @@
-import visualiser from './components/visualizer'
+import Visualiser from './components/visualizer'
 import '../static/main.css'
-console.log('yo')
-document.querySelector('body').innerHTML = '<H1> HELLO </H1>'
-const socket = new io();
-console.log(socket)
+import {loader} from 'pixi.js'
 
-socket.on('tweet', (tweet) => {
-  console.log(tweet.text)
-})
+
+const App = (function (){
+  const app = {}
+  app.run = () => {
+    console.log(loader.resources.part)
+    
+    
+    app.visualizer = new Visualiser()
+    app.socket = new io()
+    
+    app.render()
+    app.socket.on('tweet', (tweet) => {
+      app.visualizer.changeText(tweet.text)
+      console.log(tweet.text)
+    })
+  }
+  app.render = () => {
+    app.visualizer.render()
+    requestAnimationFrame(app.render);
+  }
+  return app
+})()
+
+console.log(loader)
+
+loader
+  .add('part', './static/img/part.png')
+  .load(App.run)
+
+
 
 if (module.hot) {  
-  module.hot.accept();
+  module.hot.accept()
  }

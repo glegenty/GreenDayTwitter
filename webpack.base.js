@@ -12,7 +12,7 @@ module.exports = {
     ],
     output: {
         path:     DIST_DIR,
-        publicPath: "/",        
+        publicPath: '/',        
         filename: "bundle.js"
     },
     plugins: [
@@ -29,6 +29,16 @@ module.exports = {
           test: /\.css$/,
           use: ["style-loader", "css-loader"],
         },
+        {
+          test: /\.(png|jpg|svg)$/,
+          use: {
+            loader: "url-loader",
+            options: {
+              limit: 15000,
+              name: "[name].[ext]",
+            }
+          }
+        }
       ],
     },
     resolve: {

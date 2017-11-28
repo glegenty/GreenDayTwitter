@@ -1,0 +1,28 @@
+{
+  "name": "GreenDayTwitter",
+  "version": "1.0.0",
+  "description": "GreenDay hashtag visualizer",
+  "main": "index.js",
+  "repository": "git@github.com:glegenty/GreenDayTwitter.git",
+  "author": "glegenty <g.legenty972@gmail.Com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.2",
+    "pixi.js": "^4.6.1",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "^6.24.1",
+    "copy-webpack-plugin": "^4.2.3",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-harddisk-plugin": "^0.1.0",
+    "html-webpack-plugin": "^2.30.1",
+    "webpack": "^3.8.1",
+    "webpack-dev-middleware": "^1.12.2",
+    "webpack-hot-middleware": "^2.21.0"
+  }
+}

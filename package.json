@@ -6,6 +6,9 @@
   "repository": "git@github.com:glegenty/GreenDayTwitter.git",
   "author": "glegenty <g.legenty972@gmail.Com>",
   "license": "MIT",
+  "scripts": {
+    "dev": "babel-node server.js"
+  },
   "dependencies": {
     "express": "^4.16.2",
     "pixi.js": "^4.6.1",

@@ -1,9 +1,10 @@
 import * as PIXI from 'pixi.js'
+import {TweenMax, Power2, TimelineLite, TweenLite} from "gsap";
 
 export default class Visualizer {
   constructor(opts) {
     opts = opts || {}
-    this.resolution = opts.resolution || 4
+    this.resolution = opts.resolution || 10
     this.cW = window.innerWidth
     this.cH = window.innerHeight
     this.positions = []
@@ -48,26 +49,30 @@ export default class Visualizer {
             this.positions[index] = new PIXI.Sprite(this.texture)
             this.positions[index].x = x
             this.positions[index].y = y
-            this.positions[index].scale.set(0.1)
+            this.positions[index].rotation = Math.random()
+            this.positions[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            this.positions[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
+            this.positions[index].scale.set(0.2)
             this.particles.addChild(this.positions[index])
             
             // console.log(1)
  
           } else {
-            this.positions[index].x = x;
-            this.positions[index].y = y;
+            // this.positions[index].x = x;
+            // this.positions[index].y = y;
+            this.positions[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            TweenMax.to(this.positions[index], Math.random() * (1 - 0.2) + 0.2, {x: x, y: y, ease: Power2.easeOut})      
+      
             // console.log(2)
           }
           index++;
-        } else if (this.positions[index]){
-            // console.log(this.positions[index])
-          
-          this.positions[index].destroy()
-          index++;          
         }
       }
     }
     console.log(this.positions.length - index > 0)
+    let toDestroy = this.positions.slice(index, this.positions.length);
+    toDestroy.forEach((element) => element.destroy())
+    this.positions.splice(index, this.positions.length - index);
     
     this.positions.length - index > 0 && this.particles.removeChildren(this.positions.length - index, this.positions.length)
     
@@ -75,7 +80,7 @@ export default class Visualizer {
   changeText (tweet) {
     let text = this.formatText(tweet)
     this.wordCtx.clearRect(0, 0, this.cW, this.cH)
-    this.wordCtx.font = '100px serif'
+    this.wordCtx.font = '250px serif'
     this.wordCtx.textAlign = 'center'
     this.wordCtx.fillText(text, this.cW/2, this.cH/2)
     this.getTextPosition()
@@ -94,6 +99,19 @@ export default class Visualizer {
     
     btn.addEventListener('click', () => {
       this.changeText(input.value)
+    })
+    this.wordCanvas.addEventListener('click', () => {
+      console.log('Explode')
+      
+      this.explode()
+    })
+
+  }
+
+  explode () {
+    this.positions.forEach((leaf) => {
+      TweenMax.to(leaf.scale, Math.random() * (1 - 0.2) + 0.2, {x: 0, y: 0})      
+      TweenMax.to(leaf.position, Math.random() * (1 - 0.2) + 0.2, {x: leaf.x + Math.random() * (100 - (-100)) -100, y: leaf.y + Math.random() * (100 - (-100)) -100, ease: Power2.easeOut})      
     })
   }
   render () {

@@ -1,14 +1,15 @@
 import * as PIXI from 'pixi.js'
-import {TweenMax, Power2, TimelineLite, TweenLite} from "gsap";
+import {TweenMax, Power2} from "gsap";
 
 export default class Visualizer {
   constructor(opts) {
     opts = opts || {}
-    this.resolution = opts.resolution || 8
+    this.resolution = opts.resolution || 6
     this.cW = window.innerWidth
     this.cH = window.innerHeight
     this.leaves = []
-    
+    this.score = 0
+    this.scoreText = document.querySelector('.score__count')
     // this.particles = new PIXI.particles.ParticleContainer(100000)
     this.particles = new PIXI.Container()
     
@@ -21,6 +22,10 @@ export default class Visualizer {
 
   init () {
     document.querySelector('.pixi-output').appendChild(this.renderer.view)
+    this.particles.buttonMode = true
+    this.particles.interactive = true;
+    
+    this.particles.on('click', this.explode.bind(this))
     this.stage.addChild(this.particles)
     const dummy = new PIXI.Sprite(this.texture)
     dummy.x = this.cW /2
@@ -37,7 +42,7 @@ export default class Visualizer {
     this.wordCtx = this.wordCanvas.getContext('2d')
     this.wordCanvas.style.opacity = 0
     document.querySelector('#App').appendChild(this.wordCanvas)
-    this.changeText('GreenDay')
+    this.changeText('#GreenDay')
   }
   getTextPosition () {
     const imageData = this.wordCtx.getImageData(0, 0, this.cW, this.cH)
@@ -83,7 +88,8 @@ export default class Visualizer {
     
   }
   changeText (tweet) {
-    let text = this.formatText(tweet)
+    // let text = this.formatText(tweet)
+    let text = tweet
     // this.wordCtx.clearRect(0, 0, this.cW, this.cH)
     // this.wordCtx.font = '250px sans-serif'
     // this.wordCtx.textAlign = 'center'
@@ -121,26 +127,25 @@ export default class Visualizer {
   initDebug () {
     const btn = document.querySelector('.btn-changeText')
     const input = document.querySelector('.debugText')
-    console.log(btn)
     
     btn.addEventListener('click', () => {
       this.changeText(input.value)
     })
-    this.wordCanvas.addEventListener('click', () => {
-      console.log('Explode')
+    // this.wordCanvas.addEventListener('click', () => {
+    //   console.log('Explode')
       
-      this.explode()
-    })
+    //   this.explode()
+    // })
 
   }
 
   explode () {
     this.leaves.forEach((leaf) => {
-      
-      TweenMax.to(leaf.scale, Math.random() * (1.5 - 0.2) + 0.2, {x: 0, y: 0, ease: Power2.easeOut}, )
-            
+      TweenMax.to(leaf.scale, Math.random() * (1.5 - 0.2) + 0.2, {x: 0, y: 0, ease: Power2.easeOut})
       TweenMax.to(leaf.position, Math.random() * (1.5 - 0.2) + 0.2, {x: leaf.x + Math.random() * (100 - (-100)) -100, y: leaf.y + Math.random() * (100 - (-100)) -100, ease: Power2.easeOut})      
     })
+    this.score++
+    this.scoreText.innerHTML = this.score
   }
   render () {
     this.renderer.render(this.stage)

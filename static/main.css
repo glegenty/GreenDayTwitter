@@ -53,8 +53,19 @@ body {
 
 .pixi-output {
 	position: absolute;
+	z-index: 5
 }
 .debug-text {
 	position: absolute;
 	z-index: 10;
+}
+
+.score {
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	font-family: sans-serif;
+	font-size: 50px;
+	color: white;
+	transform: translateX(-50%)
 }

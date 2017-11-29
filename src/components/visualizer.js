@@ -7,9 +7,11 @@ export default class Visualizer {
     this.resolution = opts.resolution || 10
     this.cW = window.innerWidth
     this.cH = window.innerHeight
-    this.positions = []
+    this.leaves = []
     
-    this.particles = new PIXI.particles.ParticleContainer(100000)
+    // this.particles = new PIXI.particles.ParticleContainer(100000)
+    this.particles = new PIXI.Container()
+    
     this.texture = PIXI.loader.resources['part'].texture
     console.log(this.texture)
     this.renderer = PIXI.autoDetectRenderer(this.cW, this.cH, {antialias: false, transparent: true, resolution: 1})
@@ -45,36 +47,39 @@ export default class Visualizer {
       for (let y = 0; y < imageData.height; y += this.resolution) {
         let i = (y * imageData.width + x) * 4;
         if (imageData.data[i + 3] > 128) {
-          if (index >= this.positions.length) {
-            this.positions[index] = new PIXI.Sprite(this.texture)
-            this.positions[index].x = x
-            this.positions[index].y = y
-            this.positions[index].rotation = Math.random()
-            this.positions[index].alpha = Math.random() * (1 - 0.2) + 0.2         
-            this.positions[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
-            this.positions[index].scale.set(0.2)
-            this.particles.addChild(this.positions[index])
+          if (index >= this.leaves.length) {
+            this.leaves[index] = new PIXI.Sprite(this.texture)
+            // this.leaves[index].x = x
+            // this.leaves[index].y = y
+            TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
+      
+            this.leaves[index].rotation = Math.random()
+            this.leaves[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            this.leaves[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
+            this.leaves[index].scale.set(Math.random() * (0.2 - 0.09) + 0.09)            
+            this.particles.addChild(this.leaves[index])
             
             // console.log(1)
  
           } else {
-            // this.positions[index].x = x;
-            // this.positions[index].y = y;
-            this.positions[index].alpha = Math.random() * (1 - 0.2) + 0.2         
-            TweenMax.to(this.positions[index], Math.random() * (1 - 0.2) + 0.2, {x: x, y: y, ease: Power2.easeOut})      
-      
+            // this.leaves[index].x = x
+            // this.leaves[index].y = y
+            this.leaves[index].scale.set(Math.random() * (0.2 - 0.09) + 0.09)            
+            this.leaves[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
+            
             // console.log(2)
           }
-          index++;
+          index++
         }
       }
     }
-    console.log(this.positions.length - index > 0)
-    let toDestroy = this.positions.slice(index, this.positions.length);
+    console.log(this.leaves.length - index > 0)
+    let toDestroy = this.leaves.slice(index, this.leaves.length);
     toDestroy.forEach((element) => element.destroy())
-    this.positions.splice(index, this.positions.length - index);
+    this.leaves.splice(index, this.leaves.length - index);
     
-    this.positions.length - index > 0 && this.particles.removeChildren(this.positions.length - index, this.positions.length)
+    this.leaves.length - index > 0 && this.particles.removeChildren(this.leaves.length - index, this.leaves.length)
     
   }
   changeText (tweet) {
@@ -109,9 +114,11 @@ export default class Visualizer {
   }
 
   explode () {
-    this.positions.forEach((leaf) => {
-      TweenMax.to(leaf.scale, Math.random() * (1 - 0.2) + 0.2, {x: 0, y: 0})      
-      TweenMax.to(leaf.position, Math.random() * (1 - 0.2) + 0.2, {x: leaf.x + Math.random() * (100 - (-100)) -100, y: leaf.y + Math.random() * (100 - (-100)) -100, ease: Power2.easeOut})      
+    this.leaves.forEach((leaf) => {
+      
+      TweenMax.to(leaf.scale, Math.random() * (1.5 - 0.2) + 0.2, {x: 0, y: 0, ease: Power2.easeOut}, )
+            
+      TweenMax.to(leaf.position, Math.random() * (1.5 - 0.2) + 0.2, {x: leaf.x + Math.random() * (100 - (-100)) -100, y: leaf.y + Math.random() * (100 - (-100)) -100, ease: Power2.easeOut})      
     })
   }
   render () {

@@ -42,7 +42,7 @@ export default class Visualizer {
     this.wordCtx = this.wordCanvas.getContext('2d')
     this.wordCanvas.style.opacity = 0
     document.querySelector('#App').appendChild(this.wordCanvas)
-    this.changeText('#GreenDay')
+    this.changeText('GreenDay')
   }
   getTextPosition () {
     const imageData = this.wordCtx.getImageData(0, 0, this.cW, this.cH)
@@ -54,11 +54,7 @@ export default class Visualizer {
         if (imageData.data[i + 3] > 128) {
           if (index >= this.leaves.length) {
             this.leaves[index] = new PIXI.Sprite(this.texture)
-
-            this.particles.addChild(this.leaves[index])
-            
-            // console.log(1)
- 
+            this.particles.addChild(this.leaves[index]) 
           }
           this.leaves[index].rotation = Math.random() * Math.PI
           this.leaves[index].alpha = Math.random() * (1 - 0.3) + 0.3         
@@ -79,8 +75,8 @@ export default class Visualizer {
     
   }
   changeText (tweet) {
-    // let text = this.formatText(tweet)
-    let text = tweet
+    let text = this.formatText(tweet)
+    // let text = tweet
     // this.wordCtx.clearRect(0, 0, this.cW, this.cH)
     // this.wordCtx.font = '250px sans-serif'
     // this.wordCtx.textAlign = 'center'

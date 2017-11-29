@@ -54,27 +54,18 @@ export default class Visualizer {
         if (imageData.data[i + 3] > 128) {
           if (index >= this.leaves.length) {
             this.leaves[index] = new PIXI.Sprite(this.texture)
-            // this.leaves[index].x = x
-            // this.leaves[index].y = y
-            TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
-      
-            this.leaves[index].rotation = Math.random() * Math.PI
-            this.leaves[index].alpha = Math.random() * (1 - 0.5) + 0.5         
-            this.leaves[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
-            this.leaves[index].scale.set(Math.random() * (0.15 - 0.09) + 0.09)            
+
             this.particles.addChild(this.leaves[index])
             
             // console.log(1)
  
-          } else {
-            // this.leaves[index].x = x
-            // this.leaves[index].y = y
-            this.leaves[index].scale.set(Math.random() * (0.15 - 0.09) + 0.09)            
-            this.leaves[index].alpha = Math.random() * (1 - 0.5) + 0.5         
-            TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
-            
-            // console.log(2)
           }
+          this.leaves[index].rotation = Math.random() * Math.PI
+          this.leaves[index].alpha = Math.random() * (1 - 0.3) + 0.3         
+          this.leaves[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
+          this.leaves[index].scale.set((Math.random() * (0.15 - 0.09) + 0.09) * this.fontSize / 200)  
+          TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
+          
           index++
         }
       }
@@ -107,7 +98,7 @@ export default class Visualizer {
         if (w > wordWidth) wordWidth = w;
       }
     } while (wordWidth > this.cW - 50 || fontSize * letters.length > this.cH - 50);
- 
+    this.fontSize = fontSize    
     this.wordCtx.clearRect(0, 0, this.cW, this.cH)
     this.wordCtx.textAlign = "center";
     this.wordCtx.textBaseline = "middle";
@@ -131,11 +122,7 @@ export default class Visualizer {
     btn.addEventListener('click', () => {
       this.changeText(input.value)
     })
-    // this.wordCanvas.addEventListener('click', () => {
-    //   console.log('Explode')
-      
-    //   this.explode()
-    // })
+
 
   }
 

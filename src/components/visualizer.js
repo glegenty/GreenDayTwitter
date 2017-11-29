@@ -4,7 +4,7 @@ import {TweenMax, Power2, TimelineLite, TweenLite} from "gsap";
 export default class Visualizer {
   constructor(opts) {
     opts = opts || {}
-    this.resolution = opts.resolution || 10
+    this.resolution = opts.resolution || 8
     this.cW = window.innerWidth
     this.cH = window.innerHeight
     this.leaves = []
@@ -53,10 +53,10 @@ export default class Visualizer {
             // this.leaves[index].y = y
             TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
       
-            this.leaves[index].rotation = Math.random()
-            this.leaves[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            this.leaves[index].rotation = Math.random() * Math.PI
+            this.leaves[index].alpha = Math.random() * (1 - 0.5) + 0.5         
             this.leaves[index].tint = Math.random() > 0.5 ? 0x43e97b : 0x38f9d7
-            this.leaves[index].scale.set(Math.random() * (0.2 - 0.09) + 0.09)            
+            this.leaves[index].scale.set(Math.random() * (0.15 - 0.09) + 0.09)            
             this.particles.addChild(this.leaves[index])
             
             // console.log(1)
@@ -64,8 +64,8 @@ export default class Visualizer {
           } else {
             // this.leaves[index].x = x
             // this.leaves[index].y = y
-            this.leaves[index].scale.set(Math.random() * (0.2 - 0.09) + 0.09)            
-            this.leaves[index].alpha = Math.random() * (1 - 0.2) + 0.2         
+            this.leaves[index].scale.set(Math.random() * (0.15 - 0.09) + 0.09)            
+            this.leaves[index].alpha = Math.random() * (1 - 0.5) + 0.5         
             TweenMax.fromTo(this.leaves[index], Math.random() * (1 - 0.2) + 0.2, {x: x + Math.random() * (100 - (-100)) -100, y: y + Math.random() * (100 - (-100)) -100}, {x: x, y: y, ease: Power2.easeOut})      
             
             // console.log(2)
@@ -84,12 +84,33 @@ export default class Visualizer {
   }
   changeText (tweet) {
     let text = this.formatText(tweet)
+    // this.wordCtx.clearRect(0, 0, this.cW, this.cH)
+    // this.wordCtx.font = '250px sans-serif'
+    // this.wordCtx.textAlign = 'center'
+    // this.wordCtx.fillText(text, this.cW/2, this.cH/2)
+
+    let letters = text.split('\n')
+    let fontSize = 200
+    let wordWidth = 0
+    do {
+      wordWidth = 0
+      fontSize -= 4
+      this.wordCtx.font = fontSize + "px  sans-serif"
+      for (let i = 0; i < letters.length; i++) {
+        let w = this.wordCtx.measureText(letters[i]).width;
+        if (w > wordWidth) wordWidth = w;
+      }
+    } while (wordWidth > this.cW - 50 || fontSize * letters.length > this.cH - 50);
+ 
     this.wordCtx.clearRect(0, 0, this.cW, this.cH)
-    this.wordCtx.font = '250px serif'
-    this.wordCtx.textAlign = 'center'
-    this.wordCtx.fillText(text, this.cW/2, this.cH/2)
+    this.wordCtx.textAlign = "center";
+    this.wordCtx.textBaseline = "middle";
+    for (var i = 0; i < letters.length; i++) {
+      this.wordCtx.fillText(letters[i], this.cW / 2, this.cH / 2 - fontSize * (letters.length /
+        2 - (i + 0.5)));
+    }
+
     this.getTextPosition()
-    console.log(this.positions)
     
   }
 
